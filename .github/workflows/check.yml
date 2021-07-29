@@ -1,0 +1,60 @@
+name: Check
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+
+jobs:
+  check:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        python-version: [3.9]
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Update Pip
+        run: pip install -U pip wheel
+
+      - name: Check typing
+        run: |
+          pip install mypy
+          mypy --strict src
+
+      - name: Check code syntax
+        run: |
+          pip install pylint
+          pylint --output-format=colorized src
+
+      - name: Check code style
+        run: |
+          pip install black
+          black --check --diff -- src tests
+
+      - name: Run tests
+        run: |
+          pip install tox
+          export PROJECT=$(basename ${{ github.repository }})
+          tox -e py
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v2
+        with:
+          files: ./coverage.xml
+          fail_ci_if_error: true
+
+      - name: Check tests in docs
+        run: |
+          pip install .[docs]
+          sphinx-build -M doctest docs docs/_build
