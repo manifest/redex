@@ -1,3 +1,4 @@
+from typing import Any, Sequence
 from redex.util import (
     expand_to_tuple,
     squeeze_tuple,
@@ -10,31 +11,12 @@ from redex.util import (
 )
 from hypothesis import strategies as st
 from hypothesis import given
-from typing import Any, Sequence
 import unittest
-
-
-def _any():
-    return st.none() | st.booleans() | st.integers() | st.binary() | st.text()
-
-
-def _seq_butnot_tuple():
-    return st.lists(_any()) | st.sets(_any())
-
-
-def _annotation_butnot_tuple():
-    return (
-        st.just(Any)
-        | st.just(None)
-        | st.just(True)
-        | st.just(False)
-        | st.just(Sequence[Any])
-        | st.just(Sequence[tuple[Any, ...]])
-    )
+from helper import type as _t
 
 
 class UtilTest(unittest.TestCase):
-    @given(a=_seq_butnot_tuple(), b=_seq_butnot_tuple())
+    @given(a=_t.seq_butnot_tuple(), b=_t.seq_butnot_tuple())
     def test_expand_to_tuple(self, a, b):
         test = [
             (a, (a,)),
@@ -43,7 +25,7 @@ class UtilTest(unittest.TestCase):
         ]
         [self.assertEqual(expand_to_tuple(value), expect) for (value, expect) in test]
 
-    @given(a=_seq_butnot_tuple(), b=_seq_butnot_tuple())
+    @given(a=_t.seq_butnot_tuple(), b=_t.seq_butnot_tuple())
     def test_squeeze_tuple(self, a, b):
         test = [
             (a, a),
@@ -52,7 +34,7 @@ class UtilTest(unittest.TestCase):
         ]
         [self.assertEqual(squeeze_tuple(value), expect) for (value, expect) in test]
 
-    @given(a=_any(), b=_any(), c=_any(), d=_any())
+    @given(a=_t.any(), b=_t.any(), c=_t.any(), d=_t.any())
     def test_flatten(self, a, b, c, d):
         test = [
             ([], []),
@@ -66,7 +48,7 @@ class UtilTest(unittest.TestCase):
         ]
         [self.assertEqual(flatten(value), expect) for (value, expect) in test]
 
-    @given(a=_any(), b=_any(), c=_any(), d=_any())
+    @given(a=_t.any(), b=_t.any(), c=_t.any(), d=_t.any())
     def test_flatten_tuples(self, a, b, c, d):
         test = [
             ((), []),
@@ -81,10 +63,10 @@ class UtilTest(unittest.TestCase):
         [self.assertEqual(flatten_tuples(value), expect) for (value, expect) in test]
 
     @given(
-        a=_annotation_butnot_tuple(),
-        b=_annotation_butnot_tuple(),
-        c=_annotation_butnot_tuple(),
-        d=_annotation_butnot_tuple(),
+        a=_t.annotation_butnot_tuple(),
+        b=_t.annotation_butnot_tuple(),
+        c=_t.annotation_butnot_tuple(),
+        d=_t.annotation_butnot_tuple(),
     )
     def test_flatten_tuple_annotations(self, a, b, c, d):
         test = [
@@ -129,10 +111,10 @@ class UtilTest(unittest.TestCase):
         ]
 
     @given(
-        a=_annotation_butnot_tuple(),
-        b=_annotation_butnot_tuple(),
-        c=_annotation_butnot_tuple(),
-        d=_annotation_butnot_tuple(),
+        a=_t.annotation_butnot_tuple(),
+        b=_t.annotation_butnot_tuple(),
+        c=_t.annotation_butnot_tuple(),
+        d=_t.annotation_butnot_tuple(),
     )
     def test_infer_tuple_annotation_shape(self, a, b, c, d):
         test = [
@@ -161,7 +143,7 @@ class UtilTest(unittest.TestCase):
         with self.assertRaises(ValueError):
             infer_tuple_annotation_shape(tuple)
 
-    @given(a=_any(), b=_any(), c=_any(), d=_any())
+    @given(a=_t.any(), b=_t.any(), c=_t.any(), d=_t.any())
     def test_reshape_tuples(self, a, b, c, d):
         test = [
             (((a), ((),)), (a,)),
