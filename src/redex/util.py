@@ -179,13 +179,15 @@ def infer_tuple_annotation_shape(annotation: Any) -> tuple[Any, ...]:
     ()
     """
 
-    def inner(acc: Any, annotation: Any) -> Any:
+    def inner(acc: tuple[Any, ...], annotation: Any) -> tuple[Any, ...]:
         if _is_parameterized_tuple_anotation(annotation):
-            return (*acc, reduce(inner, _generic_arguments(annotation), ()))
+            initializer: tuple[Any, ...] = ()
+            return (*acc, reduce(inner, _generic_arguments(annotation), initializer))
         return (*acc, ())
 
     if _is_parameterized_tuple_anotation(annotation):
-        return reduce(inner, _generic_arguments(annotation), ())
+        initializer: tuple[Any, ...] = ()
+        return reduce(inner, _generic_arguments(annotation), initializer)
 
     return ()
 
@@ -212,10 +214,14 @@ def reshape_tuples(item: Any, shape: tuple[Any, ...]) -> Any:
     1
     """
 
-    def inner(acc: Any, shape: Any) -> Any:
+    def inner(
+        acc: tuple[Any, tuple[Any, ...]],
+        shape: Any,
+    ) -> tuple[Any, tuple[Any, ...]]:
         flat, shaped = acc
         if shape and _is_iterable_butnot_stringlike(flat):
-            flat_rest, shaped_subitems = reduce(inner, shape, (flat, ()))
+            initializer: tuple[Any, tuple[Any, ...]] = (flat, ())
+            flat_rest, shaped_subitems = reduce(inner, shape, initializer)
             return (
                 flat_rest,
                 (*shaped, shaped_subitems),
@@ -231,7 +237,8 @@ def reshape_tuples(item: Any, shape: tuple[Any, ...]) -> Any:
     if not _is_iterable_butnot_stringlike(item):
         return (item,)
 
-    _flat, shaped = reduce(inner, shape, (item, ()))
+    initializer: tuple[Any, tuple[Any, ...]] = (item, ())
+    _flat, shaped = reduce(inner, shape, initializer)
     if _flat:
         raise RuntimeError(
             f"Failed to reshape tuples `{item}` into shape `{shape}`. ",

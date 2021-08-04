@@ -15,9 +15,9 @@ import unittest
 from helper import type as _t
 
 
-class UtilTest(unittest.TestCase):
+class ExpandToTupleTest(unittest.TestCase):
     @given(a=_t.seq_butnot_tuple(), b=_t.seq_butnot_tuple())
-    def test_expand_to_tuple(self, a, b):
+    def test_justright_input(self, a, b):
         test = [
             (a, (a,)),
             ((a,), (a,)),
@@ -25,8 +25,10 @@ class UtilTest(unittest.TestCase):
         ]
         [self.assertEqual(expand_to_tuple(value), expect) for (value, expect) in test]
 
+
+class SqueezeTupleTest(unittest.TestCase):
     @given(a=_t.seq_butnot_tuple(), b=_t.seq_butnot_tuple())
-    def test_squeeze_tuple(self, a, b):
+    def test_justright_input(self, a, b):
         test = [
             (a, a),
             ((a,), a),
@@ -34,8 +36,10 @@ class UtilTest(unittest.TestCase):
         ]
         [self.assertEqual(squeeze_tuple(value), expect) for (value, expect) in test]
 
+
+class FlattenTest(unittest.TestCase):
     @given(a=_t.any(), b=_t.any(), c=_t.any(), d=_t.any())
-    def test_flatten(self, a, b, c, d):
+    def test_justright(self, a, b, c, d):
         test = [
             ([], []),
             ([a], [a]),
@@ -48,8 +52,10 @@ class UtilTest(unittest.TestCase):
         ]
         [self.assertEqual(flatten(value), expect) for (value, expect) in test]
 
+
+class FlattenTuples(unittest.TestCase):
     @given(a=_t.any(), b=_t.any(), c=_t.any(), d=_t.any())
-    def test_flatten_tuples(self, a, b, c, d):
+    def test_justright(self, a, b, c, d):
         test = [
             ((), []),
             ((a,), [a]),
@@ -62,13 +68,15 @@ class UtilTest(unittest.TestCase):
         ]
         [self.assertEqual(flatten_tuples(value), expect) for (value, expect) in test]
 
+
+class FlattenTupleAnnotations(unittest.TestCase):
     @given(
         a=_t.annotation_butnot_tuple(),
         b=_t.annotation_butnot_tuple(),
         c=_t.annotation_butnot_tuple(),
         d=_t.annotation_butnot_tuple(),
     )
-    def test_flatten_tuple_annotations(self, a, b, c, d):
+    def test_justright(self, a, b, c, d):
         test = [
             (tuple[a], [a]),
             (tuple[a, b, c, d], [a, b, c, d]),
@@ -83,19 +91,21 @@ class UtilTest(unittest.TestCase):
             for (value, expect) in test
         ]
 
-    def test_flatten_nested_variadic_tuple_annotations(self):
+    def test_nested(self):
         value = Sequence[tuple[Any, ...]]
         self.assertEqual(flatten_tuple_annotations(value), [value])
 
-    def test_flatten_variadic_tuple_annotations(self):
+    def test_variadic_tuple_annotation(self):
         with self.assertRaises(ValueError):
             flatten_tuple_annotations(tuple[Any, ...])
 
-    def test_flatten_ambiguous_tuple_annotations(self):
+    def test_ambiguous_tuple_annotation(self):
         with self.assertRaises(ValueError):
             flatten_tuple_annotations(tuple)
 
-    def test_flatten_tuple_annotation_shape(self):
+
+class FlattenTupleAnnotationShape(unittest.TestCase):
+    def test_justright_input(self):
         test = [
             ((), [()]),
             (((),), [()]),
@@ -110,13 +120,23 @@ class UtilTest(unittest.TestCase):
             for (value, expect) in test
         ]
 
+    def test_variadic_tuple_annotation(self):
+        with self.assertRaises(ValueError):
+            infer_tuple_annotation_shape(tuple[Any, ...])
+
+    def test_ambiguous_tuple_annotation(self):
+        with self.assertRaises(ValueError):
+            infer_tuple_annotation_shape(tuple)
+
+
+class InferTupleAnnotationShapeTest(unittest.TestCase):
     @given(
         a=_t.annotation_butnot_tuple(),
         b=_t.annotation_butnot_tuple(),
         c=_t.annotation_butnot_tuple(),
         d=_t.annotation_butnot_tuple(),
     )
-    def test_infer_tuple_annotation_shape(self, a, b, c, d):
+    def test_justright_input(self, a, b, c, d):
         test = [
             (tuple[a], ((),)),
             (tuple[a, b, c, d], ((), (), (), ())),
@@ -131,20 +151,14 @@ class UtilTest(unittest.TestCase):
             for (value, expect) in test
         ]
 
-    def test_infer_variadic_tuple_annotation_shapes(self):
+    def test_embeded_variadic_tuple_annotation(self):
         value = Sequence[tuple[Any, ...]]
         self.assertEqual(infer_tuple_annotation_shape(value), ())
 
-    def test_flatten_variadic_tuple_annotation_shapes(self):
-        with self.assertRaises(ValueError):
-            infer_tuple_annotation_shape(tuple[Any, ...])
 
-    def test_flatten_ambiguous_tuple_annotation_shapes(self):
-        with self.assertRaises(ValueError):
-            infer_tuple_annotation_shape(tuple)
-
+class ReshapeTuplesTest(unittest.TestCase):
     @given(a=_t.any(), b=_t.any(), c=_t.any(), d=_t.any())
-    def test_reshape_tuples(self, a, b, c, d):
+    def test_justright_input(self, a, b, c, d):
         test = [
             (((a), ((),)), (a,)),
             (((a, b, c, d), ((), (), (), ())), (a, b, c, d)),
@@ -156,6 +170,6 @@ class UtilTest(unittest.TestCase):
         ]
         [self.assertEqual(reshape_tuples(*values), expect) for (values, expect) in test]
 
-    def test_reshape_tuples_exceeded_input(self):
+    def test_exceeded_input(self):
         with self.assertRaises(RuntimeError):
             reshape_tuples([1, 2, 3], ((), ()))

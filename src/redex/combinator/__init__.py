@@ -23,3 +23,10 @@
 """
 
 from redex.combinator.base import Combinator
+from redex.combinator.serial import serial, Serial
+from redex.combinator.parallel import parallel, Parallel
+from redex.combinator.select import select, Select
+from redex.combinator.branch import branch
+from redex.combinator.residual import residual
+from redex.combinator.dup import dup, Dup
+from redex.combinator.drop import drop, Drop
