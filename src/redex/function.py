@@ -2,7 +2,7 @@
 
 import types
 import inspect
-from typing import Any, Callable, List, NoReturn, Optional, Union
+from typing import Any, Callable, List, NoReturn, Optional
 from dataclasses import dataclass
 from functools import reduce
 from redex import util
@@ -48,12 +48,10 @@ class FineCallable:
     """The callable object with a signature."""
 
     signature: Signature
-
-    def __call__(self, *args: Any, **kwds: Any) -> Any:
-        pass
+    """a signature of the function."""
 
 
-Fn = Union[Callable[..., Any], FineCallable]
+Fn = Callable[..., Any]
 """The function."""
 
 

@@ -1,18 +1,18 @@
 """The stack is used by combinators to pass data between functions."""
 
-from typing import Any, Callable, Optional, Union
+from typing import Any, Callable, Optional
 from functools import wraps
 import logging
 from redex import util
 from redex import function as fn
-from redex.function import Fn, Signature, FineCallable
+from redex.function import Fn, Signature
 
 # TODO: enable type check after: mypy > 0.910.
 # https://github.com/python/mypy/issues/9980
 Stack = tuple[Any, ...]  # type:ignore
 """The stack."""
 
-StackMethod = Union[Callable[[Any, Stack], Stack], FineCallable]
+StackMethod = Callable[[Any, Stack], Stack]
 """The method from stack state to stack state."""
 
 
@@ -52,21 +52,49 @@ def constrained_call(
     stack_size = len(stack)
 
     logging.debug(
-        "constrained_call :: func=%s signature=%s stack_size=%s",
-        fn.infer_name(func),
-        signature,
+        "constrained_call :: %s stack_size=%s  signature=%s",
+        fn.infer_name(func).ljust(20),
         stack_size,
+        signature,
     )
 
-    if stack_size < n_in:
-        raise ValueError(
-            f"The function `{fn.infer_name(func)}` takes {n_in} "
-            f"positional arguments but {stack_size} were given."
-        )
-
+    verify_stack_size(func, stack, signature)
     inputs = util.reshape_tuples(stack[:n_in], in_shape)
     outputs = tuple(util.flatten_tuples(util.expand_to_tuple(func(*inputs))))
     return outputs + stack[n_in:]
+
+
+def verify_stack_size(
+    func: Fn,
+    stack: Stack,
+    signature: Optional[Signature] = None,
+) -> int:
+    """Verifies that the stack contains required number of arguments for function call.
+
+    Args:
+        func: a function.
+        stack: arguments available for the call.
+        signature: optional signature of the function. If not set,
+            it will be inferred.
+
+    Returns:
+        stack size.
+
+    Raises:
+        ValueError: if a number of arguments on the stack less
+            than required for function call.
+    """
+    if signature is None:
+        signature = fn.infer_signature(func)
+
+    n_in = signature.n_in
+    stack_size = len(stack)
+    if stack_size < n_in:
+        raise ValueError(
+            f"The `{fn.infer_name(func)}` takes {n_in} "
+            f"positional arguments but {stack_size} were given."
+        )
+    return stack_size
 
 
 def stackmethod(method: Fn) -> StackMethod:
