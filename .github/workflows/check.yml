@@ -30,6 +30,7 @@ jobs:
       - name: Check typing
         run: |
           pip install mypy
+          mypy --install-types --non-interactive src
           mypy --strict src
 
       - name: Check code syntax
