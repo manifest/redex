@@ -36,6 +36,9 @@ setup(
         "Topic :: Scientific/Engineering",
         "Typing :: Typed",
     ],
+    # Required for mypy to find the installed package.
+    zip_safe=False,
+    package_data={f"src/{PROJECT}": ["py.typed"]},
     packages=find_packages(where="src"),
     package_dir={"": "src"},
     python_requires=">=3.9",
