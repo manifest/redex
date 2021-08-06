@@ -1,17 +1,8 @@
-"""The duplicate combinator.
+"""The duplicate combinator."""
 
-The combinator makes a copy of the top items on the stack.
-
->>> import operator as op
->>> from redex import combinator as cb
->>> dup = cb.dup()
->>> dup(1) == (1, 1)
-True
-"""
-
-from redex.stack import stackmethod, verify_stack_size, Stack
-from redex.function import Signature
-from redex.combinator.base import Combinator
+from redex._src.stack import stackmethod, verify_stack_size, Stack
+from redex._src.function import Signature
+from redex._src.combinator.base import Combinator
 
 # pylint: disable=too-few-public-methods
 class Dup(Combinator):
@@ -27,6 +18,13 @@ class Dup(Combinator):
 
 def dup(n_in: int = 1) -> Dup:
     """Creates a duplicate combinator.
+
+    The combinator makes a copy of the top items on the stack.
+
+    >>> from redex import combinator as cb
+    >>> dup = cb.dup()
+    >>> dup(1) == (1, 1)
+    True
 
     Args:
         n_in: a number of inputs.

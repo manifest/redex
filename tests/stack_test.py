@@ -1,8 +1,7 @@
 import operator as op
-from redex.stack import constrained_call, stackmethod, Stack, verify_stack_size
-from redex.function import Signature
+from redex._src.stack import constrained_call, stackmethod, Stack, verify_stack_size
+from redex._src.function import Signature
 import unittest
-from hypothesis import strategies as st
 from hypothesis import given
 from helper import type as _t
 

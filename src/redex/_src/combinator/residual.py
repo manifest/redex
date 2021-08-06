@@ -1,23 +1,23 @@
-"""The residual combinator.
+"""The residual combinator."""
 
-The combinator computes the sum of two branches: main and shortcut.
-
->>> import operator as op
->>> from redex import combinator as cb
->>> residual = cb.residual(cb.serial(op.add, op.add))
->>> residual(1, 2, 3) == 1 + 2 + 3 + 1
-True
-"""
-
-from redex.function import Fn
-from redex import function as fn
-from redex.combinator.serial import serial, Serial
-from redex.combinator.branch import branch
-from redex import operator as op
+from operator import add
+from redex._src.operator.identity import identity
+from redex._src.function import Fn
+from redex._src import function as fn
+from redex._src.combinator.serial import serial, Serial
+from redex._src.combinator.branch import branch
 
 
-def residual(*children: Fn, shortcut: Fn = op.identity) -> Serial:
+def residual(*children: Fn, shortcut: Fn = identity) -> Serial:
     """Creates a residual combinator.
+
+    The combinator computes the sum of two branches: main and shortcut.
+
+    >>> import operator as op
+    >>> from redex import combinator as cb
+    >>> residual = cb.residual(cb.serial(op.add, op.add))
+    >>> residual(1, 2, 3) == 1 + 2 + 3 + 1
+    True
 
     Args:
         children: a main sequence of functions.
@@ -47,5 +47,5 @@ def residual(*children: Fn, shortcut: Fn = op.identity) -> Serial:
 
     return serial(
         branch(grouped_children, shortcut),
-        op.add,
+        add,
     )

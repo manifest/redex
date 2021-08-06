@@ -1,21 +1,12 @@
-"""The serial combinator.
-
-The combinator applies functions in series (function composition).
-
->>> import operator as op
->>> from redex import combinator as cb
->>> serial = cb.serial(op.add, op.add, op.add)
->>> serial(1, 2, 3, 4) == 1 + 2 + 3 + 4
-True
-"""
+"""The serial combinator."""
 
 from typing import List
 from functools import reduce
-from redex import util
-from redex import function as fn
-from redex.function import Fn, Signature
-from redex.stack import constrained_call, stackmethod, Stack
-from redex.combinator.base import Combinator
+from redex._src import util
+from redex._src import function as fn
+from redex._src.function import Fn, Signature
+from redex._src.stack import constrained_call, stackmethod, Stack
+from redex._src.combinator.base import Combinator
 
 
 # pylint: disable=too-few-public-methods
@@ -37,6 +28,14 @@ class Serial(Combinator):
 
 def serial(*children: Fn) -> Serial:
     """Creates a serial combinator.
+
+    The combinator applies functions in series (function composition).
+
+    >>> import operator as op
+    >>> from redex import combinator as cb
+    >>> serial = cb.serial(op.add, op.add, op.add)
+    >>> serial(1, 2, 3, 4) == 1 + 2 + 3 + 4
+    True
 
     Args:
         children: a sequence of functions.
