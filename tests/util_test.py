@@ -1,5 +1,5 @@
 from typing import Any, Sequence
-from redex.util import (
+from redex._src.util import (
     expand_to_tuple,
     squeeze_tuple,
     flatten,
@@ -9,7 +9,6 @@ from redex.util import (
     infer_tuple_annotation_shape,
     reshape_tuples,
 )
-from hypothesis import strategies as st
 from hypothesis import given
 import unittest
 from helper import type as _t

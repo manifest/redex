@@ -1,10 +1,10 @@
-import pathlib
+from pathlib import Path
 from setuptools import setup
 from setuptools import find_packages
 
 PROJECT = "redex"
 REPOSITORY = f"manifest/{PROJECT}"
-README = (pathlib.Path(__file__).parent / "README.md").read_text()
+README = (Path(__file__).parent / "README.md").read_text()
 
 # Setup project version.
 __version__ = None

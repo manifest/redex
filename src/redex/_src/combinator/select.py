@@ -1,18 +1,9 @@
-"""The select combinator.
-
-The combinator allows to change order or copy inputs.
-
->>> import operator as op
->>> from redex import combinator as cb
->>> select = cb.select([0, 0, 1, 1])
->>> select(1, 2, 3, 4) == (1, 1, 2, 2, 3, 4)
-True
-"""
+"""The select combinator."""
 
 from typing import Optional, List
-from redex.function import Signature
-from redex.stack import stackmethod, Stack
-from redex.combinator.base import Combinator
+from redex._src.function import Signature
+from redex._src.stack import stackmethod, Stack
+from redex._src.combinator.base import Combinator
 
 # pylint: disable=too-few-public-methods
 class Select(Combinator):
@@ -29,6 +20,13 @@ class Select(Combinator):
 
 def select(indices: List[int], n_in: Optional[int] = None) -> Select:
     """Creates a select combinator.
+
+    The combinator allows to change order or copy inputs.
+
+    >>> from redex import combinator as cb
+    >>> select = cb.select([0, 0, 1, 1])
+    >>> select(1, 2, 3, 4) == (1, 1, 2, 2, 3, 4)
+    True
 
     Args:
         indices: a sequence of 0-based indices relative to the top of the stack.

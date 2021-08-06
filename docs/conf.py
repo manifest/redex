@@ -70,6 +70,7 @@ def run_apidoc(_):
         "-f",
         "--separate",
         "--module-first",
+        "-d", "1",
         "-H", project,
         "-A", author,
         "-V", version,

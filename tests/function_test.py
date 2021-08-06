@@ -1,10 +1,10 @@
 from typing import Any, NoReturn
 import inspect
 import functools
-import operator as op
 import unittest
-from redex.function import infer_signature, infer_name, Signature
-from redex.function import _count_outputs, _infer_input_shape, FineCallable
+import operator as op
+from redex._src.function import infer_signature, infer_name, FineCallable, Signature
+from redex._src.function import _count_outputs, _infer_input_shape
 
 
 class InferSignatureTest(unittest.TestCase):

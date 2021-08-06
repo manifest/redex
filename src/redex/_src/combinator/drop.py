@@ -1,17 +1,8 @@
-"""The drop combinator.
+"""The drop combinator."""
 
-Drops the top stack items.
-
->>> import operator as op
->>> from redex import combinator as cb
->>> drop = cb.drop()
->>> drop(1, 2) == 2
-True
-"""
-
-from redex.function import Signature
-from redex.stack import stackmethod, verify_stack_size, Stack
-from redex.combinator.base import Combinator
+from redex._src.function import Signature
+from redex._src.stack import stackmethod, verify_stack_size, Stack
+from redex._src.combinator.base import Combinator
 
 # pylint: disable=too-few-public-methods
 class Drop(Combinator):
@@ -26,6 +17,13 @@ class Drop(Combinator):
 
 def drop(n_in: int = 1) -> Drop:
     """Creates a duplicate combinator.
+
+    Drops the top stack items.
+
+    >>> from redex import combinator as cb
+    >>> drop = cb.drop()
+    >>> drop(1, 2) == 2
+    True
 
     Args:
         n_in: a number of inputs.

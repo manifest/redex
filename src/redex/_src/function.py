@@ -2,10 +2,10 @@
 
 import types
 import inspect
-from typing import Any, Callable, List, NoReturn, Optional
+from typing import Any, Callable, Iterable, List, NoReturn, Optional, Union
 from dataclasses import dataclass
 from functools import reduce
-from redex import util
+from redex._src import util
 
 
 @dataclass
