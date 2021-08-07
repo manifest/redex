@@ -54,6 +54,12 @@ class FineCallable:
 Fn = Callable[..., Any]
 """The function."""
 
+FnIter = Union[Fn, Iterable[Fn]]
+"""A single function or sequence of functions."""
+# FnIter = Union[Fn, Iterable["FnIter"]]
+# NOTE: recursive types are not supported by mypy.
+# https://github.com/python/mypy/issues/731
+
 
 def infer_name(func: Fn) -> str:
     """Infers a name of the function.

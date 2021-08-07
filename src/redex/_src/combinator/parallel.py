@@ -3,10 +3,13 @@
 from typing import List
 from functools import reduce
 from dataclasses import replace
+from redex._src import util
 from redex._src import function as fn
-from redex._src.function import Fn, Signature
+from redex._src.function import Fn, FnIter, Signature
 from redex._src.stack import constrained_call, stackmethod, Stack
 from redex._src.combinator.base import Combinator
+
+# pylint: disable=too-few-public-methods
 
 
 # pylint: disable=too-few-public-methods
@@ -29,7 +32,7 @@ class Parallel(Combinator):
         return outputs + stack[self.signature.n_in :]
 
 
-def parallel(*children: Fn) -> Parallel:
+def parallel(*children: FnIter) -> Parallel:
     """Creates a parallel combinator.
 
     The combinator applies functions in parallel.
@@ -46,10 +49,11 @@ def parallel(*children: Fn) -> Parallel:
     Returns:
         a combinator.
     """
-    signature, children_signatures = _estimate_parallel_signatures(children)
+    flat_children = util.flatten(children)
+    signature, children_signatures = _estimate_parallel_signatures(flat_children)
     return Parallel(
         signature=signature,
-        children=children,
+        children=flat_children,
         children_signatures=children_signatures,
     )
 
@@ -58,7 +62,7 @@ _Initializer = tuple[int, int, List[Signature]]
 
 
 def _estimate_parallel_signatures(
-    children: tuple[Fn, ...],
+    children: List[Fn],
 ) -> tuple[Signature, List[Signature]]:
     def count(acc: _Initializer, child: Fn) -> _Initializer:
         in_total, out_total, signatures = acc

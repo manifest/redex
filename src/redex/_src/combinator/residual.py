@@ -2,13 +2,14 @@
 
 from operator import add
 from redex._src.operator.identity import identity
-from redex._src.function import Fn
+from redex._src import util
+from redex._src.function import Fn, FnIter
 from redex._src import function as fn
 from redex._src.combinator.serial import serial, Serial
 from redex._src.combinator.branch import branch
 
 
-def residual(*children: Fn, shortcut: Fn = identity) -> Serial:
+def residual(*children: FnIter, shortcut: Fn = identity) -> Serial:
     """Creates a residual combinator.
 
     The combinator computes the sum of two branches: main and shortcut.
@@ -26,10 +27,11 @@ def residual(*children: Fn, shortcut: Fn = identity) -> Serial:
     Returns:
         a combinator.
     """
-    if len(children) == 1:
-        grouped_children = children[0]
+    flat_children = util.flatten(children)
+    if len(flat_children) == 1:
+        grouped_children = flat_children[0]
     else:
-        grouped_children = serial(*children)
+        grouped_children = serial(*flat_children)
 
     grouped_children_signature = fn.infer_signature(grouped_children)
     if grouped_children_signature.n_out != 1:

@@ -2,11 +2,11 @@
 
 from typing import List
 from functools import reduce
+from redex._src.combinator.base import Combinator
 from redex._src import util
 from redex._src import function as fn
-from redex._src.function import Fn, Signature
+from redex._src.function import Fn, FnIter, Signature
 from redex._src.stack import constrained_call, stackmethod, Stack
-from redex._src.combinator.base import Combinator
 
 
 # pylint: disable=too-few-public-methods
@@ -26,7 +26,7 @@ class Serial(Combinator):
         return stack
 
 
-def serial(*children: Fn) -> Serial:
+def serial(*children: FnIter) -> Serial:
     """Creates a serial combinator.
 
     The combinator applies functions in series (function composition).

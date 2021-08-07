@@ -2,14 +2,15 @@
 
 from typing import List
 from functools import reduce
+from redex._src import util
 from redex._src import function as fn
-from redex._src.function import Fn
+from redex._src.function import Fn, FnIter
 from redex._src.combinator.serial import serial, Serial
 from redex._src.combinator.parallel import parallel
 from redex._src.combinator.select import select
 
 
-def branch(*children: Fn) -> Serial:
+def branch(*children: FnIter) -> Serial:
     """Creates a branch combinator.
 
     The combinator combines multiple branches of combosite functions
@@ -28,14 +29,15 @@ def branch(*children: Fn) -> Serial:
     Returns:
         a combinator.
     """
-    indices = _estimate_branch_indices(children)
+    flat_children = util.flatten(children)
+    indices = _estimate_branch_indices(flat_children)
     return serial(
         select(indices=indices),
-        parallel(*children),
+        parallel(*flat_children),
     )
 
 
-def _estimate_branch_indices(children: tuple[Fn, ...]) -> List[int]:
+def _estimate_branch_indices(children: List[Fn]) -> List[int]:
     def count(acc: List[int], child: Fn) -> List[int]:
         signature = fn.infer_signature(child)
         return acc + list(range(0, signature.n_in))
