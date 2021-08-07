@@ -46,6 +46,10 @@ class SerialTest(unittest.TestCase):
         comb = serial(serial(op.add, op.sub), op.add)
         self.assertEqual(comb(1, 2, 3, 4), ((1 + 2) - 3) + 4)
 
+    def test_nested_aslist(self):
+        comb = serial([op.add, [op.sub, op.add]])
+        self.assertEqual(comb(1, 2, 3, 4), ((1 + 2) - 3) + 4)
+
     def test_extra_input(self):
         comb = serial(op.add)
         self.assertEqual(comb(1, 2, 3, 4), (1 + 2, 3, 4))
@@ -79,6 +83,10 @@ class BranchTest(unittest.TestCase):
         comb = branch(branch(op.add, op.add), op.add)
         self.assertEqual(comb(1, 2), (1 + 2, 1 + 2, 1 + 2))
 
+    def test_nested_aslist(self):
+        comb = branch([op.add, [op.sub, op.add]])
+        self.assertEqual(comb(1, 2), (1 + 2, 1 - 2, 1 + 2))
+
     def test_extra_input(self):
         comb = branch(op.add)
         self.assertEqual(comb(1, 2, 3, 4), (1 + 2, 3, 4))
@@ -110,6 +118,10 @@ class ParallelTest(unittest.TestCase):
 
     def test_nested(self):
         comb = parallel(parallel(op.add, op.sub), op.add)
+        self.assertEqual(comb(1, 2, 3, 4, 5, 6), (1 + 2, 3 - 4, 5 + 6))
+
+    def test_nested_aslist(self):
+        comb = parallel([[op.add, op.sub], op.add])
         self.assertEqual(comb(1, 2, 3, 4, 5, 6), (1 + 2, 3 - 4, 5 + 6))
 
     def test_extra_input(self):
@@ -152,6 +164,10 @@ class ResidualTest(unittest.TestCase):
     def test_nested(self):
         comb = residual(residual(op.add, op.sub), op.add)
         self.assertEqual(comb(1, 2, 3, 4), ((((1 + 2) - 3) + 1) + 4) + 1)
+
+    def test_nested_aslist(self):
+        comb = residual([op.add, [op.sub, op.add]])
+        self.assertEqual(comb(1, 2, 3, 4), ((1 + 2) - 3) + 4 + 1)
 
     def test_extra_input(self):
         comb = residual(op.add)
