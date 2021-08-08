@@ -30,24 +30,34 @@ jobs:
       - name: Check typing
         run: |
           pip install mypy
-          mypy --install-types --non-interactive src
-          mypy --strict src
+          mypy --install-types --non-interactive "src"
+          if [[ -f "mypy.ini" ]]; then
+            export OPTIONS=(--config-file "mypy.ini")
+          else
+            export OPTIONS=(--strict)
+          fi
+          mypy "${OPTIONS[@]}" "src"
+        # Use a config file `mypy.ini` if presented, or fall to strict mode otherwise.
 
       - name: Check code syntax
         run: |
           pip install pylint
-          pylint --output-format=colorized src
+          pylint -d fixme --output-format=colorized "src"
+        # TODO, FIXME, and other similar warnings are disabled.
 
       - name: Check code style
         run: |
           pip install black
-          black --check --diff -- src tests
+          black --check --diff -- "src" "tests"
+        # Check source and tests directories.
 
       - name: Run tests
         run: |
           pip install tox
-          export PROJECT=$(basename ${{ github.repository }})
+          export REPOSITORY=${{ github.repository }}
+          export PROJECT=$(basename ${REPOSITORY/-/_})
           tox -e py
+        # Infer project directory from the repository name.
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v2
@@ -58,4 +68,4 @@ jobs:
       - name: Check tests in docs
         run: |
           pip install .[docs]
-          sphinx-build -M doctest docs docs/_build
+          sphinx-build -M doctest "docs" "docs/_build"
