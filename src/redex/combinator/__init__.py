@@ -22,14 +22,14 @@ parameters must be definite (e.g. tuple parameters must be specified
 and variadic tuples must not be used)*.
 """
 
-from redex._src.combinator.base import Combinator
-from redex._src.combinator.serial import serial, Serial
-from redex._src.combinator.parallel import parallel, Parallel
-from redex._src.combinator.select import select, Select
-from redex._src.combinator.branch import branch
-from redex._src.combinator.residual import residual
-from redex._src.combinator.dup import dup, Dup
-from redex._src.combinator.drop import drop, Drop
+from redex.combinator._base import Combinator
+from redex.combinator._serial import serial, Serial
+from redex.combinator._parallel import parallel, Parallel
+from redex.combinator._select import select, Select
+from redex.combinator._branch import branch
+from redex.combinator._residual import residual
+from redex.combinator._dup import dup, Dup
+from redex.combinator._drop import drop, Drop
 
 __all__ = [
     "Combinator",

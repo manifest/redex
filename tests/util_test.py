@@ -1,5 +1,5 @@
 from typing import Any, Sequence
-from redex._src.util import (
+from redex.util import (
     expand_to_tuple,
     squeeze_tuple,
     flatten,

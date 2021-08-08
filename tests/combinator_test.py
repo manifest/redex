@@ -1,19 +1,12 @@
 import unittest
-import operator as op
-from redex._src.combinator.base import Combinator
-from redex._src.combinator.serial import serial
-from redex._src.combinator.parallel import parallel
-from redex._src.combinator.branch import branch
-from redex._src.combinator.residual import residual
-from redex._src.combinator.select import select
-from redex._src.combinator.dup import dup
-from redex._src.combinator.drop import drop
-from redex._src.function import Signature
+from redex import operator as op
+from redex import combinator as cb
+from redex.function import Signature
 
 
 class CombinatorTest(unittest.TestCase):
     def test_combinator_is_dataclass(self):
-        class A(Combinator):
+        class A(cb.Combinator):
             a: int
             pass
 
@@ -25,282 +18,282 @@ class CombinatorTest(unittest.TestCase):
 
 class SerialTest(unittest.TestCase):
     def test_signature(self):
-        comb = serial(op.add, op.add)
-        self.assertEqual(comb.signature.n_in, 3)
-        self.assertEqual(comb.signature.n_out, 1)
-        self.assertEqual(comb.signature.in_shape, ((), (), ()))
+        serial = cb.serial(op.add, op.add)
+        self.assertEqual(serial.signature.n_in, 3)
+        self.assertEqual(serial.signature.n_out, 1)
+        self.assertEqual(serial.signature.in_shape, ((), (), ()))
 
     def test_empty(self):
-        comb = serial()
-        self.assertEqual(comb(1, 2, 3, 4), (1, 2, 3, 4))
+        serial = cb.serial()
+        self.assertEqual(serial(1, 2, 3, 4), (1, 2, 3, 4))
 
     def test_single_child(self):
-        comb = serial(op.add)
-        self.assertEqual(comb(1, 2), 1 + 2)
+        serial = cb.serial(op.add)
+        self.assertEqual(serial(1, 2), 1 + 2)
 
     def test_many_children(self):
-        comb = serial(op.add, op.sub, op.add)
-        self.assertEqual(comb(1, 2, 3, 4), ((1 + 2) - 3) + 4)
+        serial = cb.serial(op.add, op.sub, op.add)
+        self.assertEqual(serial(1, 2, 3, 4), ((1 + 2) - 3) + 4)
 
     def test_nested(self):
-        comb = serial(serial(op.add, op.sub), op.add)
-        self.assertEqual(comb(1, 2, 3, 4), ((1 + 2) - 3) + 4)
+        serial = cb.serial(cb.serial(op.add, op.sub), op.add)
+        self.assertEqual(serial(1, 2, 3, 4), ((1 + 2) - 3) + 4)
 
     def test_nested_aslist(self):
-        comb = serial([op.add, [op.sub, op.add]])
-        self.assertEqual(comb(1, 2, 3, 4), ((1 + 2) - 3) + 4)
+        serial = cb.serial([op.add, [op.sub, op.add]])
+        self.assertEqual(serial(1, 2, 3, 4), ((1 + 2) - 3) + 4)
 
     def test_extra_input(self):
-        comb = serial(op.add)
-        self.assertEqual(comb(1, 2, 3, 4), (1 + 2, 3, 4))
+        serial = cb.serial(op.add)
+        self.assertEqual(serial(1, 2, 3, 4), (1 + 2, 3, 4))
 
     def test_less_input(self):
-        comb = serial(op.add)
+        serial = cb.serial(op.add)
         with self.assertRaises(ValueError):
-            comb(1)
+            serial(1)
 
 
 class BranchTest(unittest.TestCase):
     def test_signature(self):
-        comb = branch(op.add, op.add)
-        self.assertEqual(comb.signature.n_in, 2)
-        self.assertEqual(comb.signature.n_out, 2)
-        self.assertEqual(comb.signature.in_shape, ((), ()))
+        branch = cb.branch(op.add, op.add)
+        self.assertEqual(branch.signature.n_in, 2)
+        self.assertEqual(branch.signature.n_out, 2)
+        self.assertEqual(branch.signature.in_shape, ((), ()))
 
     def test_empty(self):
-        comb = branch()
-        self.assertEqual(comb(1, 2, 3, 4), (1, 2, 3, 4))
+        branch = cb.branch()
+        self.assertEqual(branch(1, 2, 3, 4), (1, 2, 3, 4))
 
     def test_single_child(self):
-        comb = branch(op.add)
-        self.assertEqual(comb(1, 2), 1 + 2)
+        branch = cb.branch(op.add)
+        self.assertEqual(branch(1, 2), 1 + 2)
 
     def test_many_children(self):
-        comb = branch(op.add, op.add)
-        self.assertEqual(comb(1, 2), (1 + 2, 1 + 2))
+        branch = cb.branch(op.add, op.add)
+        self.assertEqual(branch(1, 2), (1 + 2, 1 + 2))
 
     def test_nested(self):
-        comb = branch(branch(op.add, op.add), op.add)
-        self.assertEqual(comb(1, 2), (1 + 2, 1 + 2, 1 + 2))
+        branch = cb.branch(cb.branch(op.add, op.add), op.add)
+        self.assertEqual(branch(1, 2), (1 + 2, 1 + 2, 1 + 2))
 
     def test_nested_aslist(self):
-        comb = branch([op.add, [op.sub, op.add]])
-        self.assertEqual(comb(1, 2), (1 + 2, 1 - 2, 1 + 2))
+        branch = cb.branch([op.add, [op.sub, op.add]])
+        self.assertEqual(branch(1, 2), (1 + 2, 1 - 2, 1 + 2))
 
     def test_extra_input(self):
-        comb = branch(op.add)
-        self.assertEqual(comb(1, 2, 3, 4), (1 + 2, 3, 4))
+        branch = cb.branch(op.add)
+        self.assertEqual(branch(1, 2, 3, 4), (1 + 2, 3, 4))
 
     def test_less_input(self):
-        comb = branch(op.add)
+        branch = cb.branch(op.add)
         with self.assertRaises(ValueError):
-            comb(1)
+            branch(1)
 
 
 class ParallelTest(unittest.TestCase):
     def test_signature(self):
-        comb = parallel(op.add, op.add)
-        self.assertEqual(comb.signature.n_in, 4)
-        self.assertEqual(comb.signature.n_out, 2)
-        self.assertEqual(comb.signature.in_shape, ((), (), (), ()))
+        parallel = cb.parallel(op.add, op.add)
+        self.assertEqual(parallel.signature.n_in, 4)
+        self.assertEqual(parallel.signature.n_out, 2)
+        self.assertEqual(parallel.signature.in_shape, ((), (), (), ()))
 
     def test_empty(self):
-        comb = parallel()
-        self.assertEqual(comb(1, 2, 3, 4), (1, 2, 3, 4))
+        parallel = cb.parallel()
+        self.assertEqual(parallel(1, 2, 3, 4), (1, 2, 3, 4))
 
     def test_single_child(self):
-        comb = parallel(op.add)
-        self.assertEqual(comb(1, 2), 1 + 2)
+        parallel = cb.parallel(op.add)
+        self.assertEqual(parallel(1, 2), 1 + 2)
 
     def test_many_children(self):
-        comb = parallel(op.add, op.sub)
-        self.assertEqual(comb(1, 2, 3, 4), (1 + 2, 3 - 4))
+        parallel = cb.parallel(op.add, op.sub)
+        self.assertEqual(parallel(1, 2, 3, 4), (1 + 2, 3 - 4))
 
     def test_nested(self):
-        comb = parallel(parallel(op.add, op.sub), op.add)
-        self.assertEqual(comb(1, 2, 3, 4, 5, 6), (1 + 2, 3 - 4, 5 + 6))
+        parallel = cb.parallel(cb.parallel(op.add, op.sub), op.add)
+        self.assertEqual(parallel(1, 2, 3, 4, 5, 6), (1 + 2, 3 - 4, 5 + 6))
 
     def test_nested_aslist(self):
-        comb = parallel([[op.add, op.sub], op.add])
-        self.assertEqual(comb(1, 2, 3, 4, 5, 6), (1 + 2, 3 - 4, 5 + 6))
+        parallel = cb.parallel([[op.add, op.sub], op.add])
+        self.assertEqual(parallel(1, 2, 3, 4, 5, 6), (1 + 2, 3 - 4, 5 + 6))
 
     def test_extra_input(self):
-        comb = parallel(op.add)
-        self.assertEqual(comb(1, 2, 3, 4), (1 + 2, 3, 4))
+        parallel = cb.parallel(op.add)
+        self.assertEqual(parallel(1, 2, 3, 4), (1 + 2, 3, 4))
 
     def test_less_input(self):
-        comb = parallel(op.add)
+        parallel = cb.parallel(op.add)
         with self.assertRaises(ValueError):
-            comb(1)
+            parallel(1)
 
 
 class ResidualTest(unittest.TestCase):
     def test_signature(self):
-        comb = residual(op.add, op.add)
-        self.assertEqual(comb.signature.n_in, 3)
-        self.assertEqual(comb.signature.n_out, 1)
-        self.assertEqual(comb.signature.in_shape, ((), (), ()))
+        residual = cb.residual(op.add, op.add)
+        self.assertEqual(residual.signature.n_in, 3)
+        self.assertEqual(residual.signature.n_out, 1)
+        self.assertEqual(residual.signature.in_shape, ((), (), ()))
 
     def test_empty(self):
         with self.assertRaises(ValueError):
-            residual()
+            cb.residual()
 
     def test_single_child(self):
-        comb = residual(op.add)
-        self.assertEqual(comb(1, 2), (1 + 2) + 1)
+        residual = cb.residual(op.add)
+        self.assertEqual(residual(1, 2), (1 + 2) + 1)
 
     def test_many_children(self):
-        comb = residual(op.add, op.sub)
-        self.assertEqual(comb(1, 2, 3), ((1 + 2) - 3) + 1)
+        residual = cb.residual(op.add, op.sub)
+        self.assertEqual(residual(1, 2, 3), ((1 + 2) - 3) + 1)
 
     def test_single_shortcut(self):
-        comb = residual(op.add, shortcut=op.sub)
-        self.assertEqual(comb(1, 2), (1 + 2) + (1 - 2))
+        residual = cb.residual(op.add, shortcut=op.sub)
+        self.assertEqual(residual(1, 2), (1 + 2) + (1 - 2))
 
     def test_many_shortcuts(self):
-        comb = residual(op.add, shortcut=serial(op.add, op.sub))
-        self.assertEqual(comb(1, 2, 3), (1 + 2) + (1 + 2 - 3))
+        residual = cb.residual(op.add, shortcut=cb.serial(op.add, op.sub))
+        self.assertEqual(residual(1, 2, 3), (1 + 2) + (1 + 2 - 3))
 
     def test_nested(self):
-        comb = residual(residual(op.add, op.sub), op.add)
-        self.assertEqual(comb(1, 2, 3, 4), ((((1 + 2) - 3) + 1) + 4) + 1)
+        residual = cb.residual(cb.residual(op.add, op.sub), op.add)
+        self.assertEqual(residual(1, 2, 3, 4), ((((1 + 2) - 3) + 1) + 4) + 1)
 
     def test_nested_aslist(self):
-        comb = residual([op.add, [op.sub, op.add]])
-        self.assertEqual(comb(1, 2, 3, 4), ((1 + 2) - 3) + 4 + 1)
+        residual = cb.residual([op.add, [op.sub, op.add]])
+        self.assertEqual(residual(1, 2, 3, 4), ((1 + 2) - 3) + 4 + 1)
 
     def test_extra_input(self):
-        comb = residual(op.add)
-        self.assertEqual(comb(1, 2, 3, 4), ((1 + 2) + 1, 3, 4))
+        residual = cb.residual(op.add)
+        self.assertEqual(residual(1, 2, 3, 4), ((1 + 2) + 1, 3, 4))
 
     def test_less_input(self):
-        comb = residual(op.add)
+        residual = cb.residual(op.add)
         with self.assertRaises(ValueError):
-            comb(1)
+            residual(1)
 
     def test_extra_output(self):
         with self.assertRaises(ValueError):
-            residual(dup())
+            cb.residual(cb.dup())
 
     def test_less_output(self):
         with self.assertRaises(ValueError):
-            residual(drop())
+            cb.residual(cb.drop())
 
     def test_extra_shortcut_output(self):
         with self.assertRaises(ValueError):
-            residual(op.add, shortcut=dup())
+            cb.residual(op.add, shortcut=cb.dup())
 
     def test_less_shortcut_output(self):
         with self.assertRaises(ValueError):
-            residual(op.add, shortcut=drop())
+            cb.residual(op.add, shortcut=cb.drop())
 
 
 class SelectTest(unittest.TestCase):
     def test_signature(self):
-        comb = select(indices=[0])
-        self.assertEqual(comb.signature.n_in, 1)
-        self.assertEqual(comb.signature.n_out, 1)
-        self.assertEqual(comb.signature.in_shape, ((),))
+        select = cb.select(indices=[0])
+        self.assertEqual(select.signature.n_in, 1)
+        self.assertEqual(select.signature.n_out, 1)
+        self.assertEqual(select.signature.in_shape, ((),))
 
     def test_empty(self):
-        comb = select(indices=[])
-        self.assertEqual(comb(1, 2, 3, 4), (1, 2, 3, 4))
+        select = cb.select(indices=[])
+        self.assertEqual(select(1, 2, 3, 4), (1, 2, 3, 4))
 
     def test_single_1st_item(self):
-        comb = select(indices=[0])
-        self.assertEqual(comb(1, 2, 3, 4), (1, 2, 3, 4))
+        select = cb.select(indices=[0])
+        self.assertEqual(select(1, 2, 3, 4), (1, 2, 3, 4))
 
     def test_many_1st_items(self):
-        comb = select(indices=[0, 0])
-        self.assertEqual(comb(1, 2, 3, 4), (1, 1, 2, 3, 4))
+        select = cb.select(indices=[0, 0])
+        self.assertEqual(select(1, 2, 3, 4), (1, 1, 2, 3, 4))
 
     def test_many_3rd_items(self):
-        comb = select(indices=[2, 2])
-        self.assertEqual(comb(1, 2, 3, 4), (3, 3, 4))
+        select = cb.select(indices=[2, 2])
+        self.assertEqual(select(1, 2, 3, 4), (3, 3, 4))
 
     def test_consume_more(self):
-        comb = select(indices=[0], n_in=2)
-        self.assertEqual(comb(1, 2, 3, 4), (1, 3, 4))
+        select = cb.select(indices=[0], n_in=2)
+        self.assertEqual(select(1, 2, 3, 4), (1, 3, 4))
 
     def test_consume_less(self):
-        comb = select(indices=[2], n_in=1)
-        self.assertEqual(comb(1, 2, 3, 4), (3, 2, 3, 4))
+        select = cb.select(indices=[2], n_in=1)
+        self.assertEqual(select(1, 2, 3, 4), (3, 2, 3, 4))
 
     def test_donot_consume(self):
-        comb = select(indices=[2], n_in=0)
-        self.assertEqual(comb(1, 2, 3, 4), (3, 1, 2, 3, 4))
+        select = cb.select(indices=[2], n_in=0)
+        self.assertEqual(select(1, 2, 3, 4), (3, 1, 2, 3, 4))
 
     def test_extra_input(self):
-        comb = select(indices=[2])
-        self.assertEqual(comb(1, 2, 3, 4), (3, 4))
+        select = cb.select(indices=[2])
+        self.assertEqual(select(1, 2, 3, 4), (3, 4))
 
     def test_less_input(self):
-        comb = select(indices=[2])
+        select = cb.select(indices=[2])
         with self.assertRaises(IndexError):
-            comb(1)
+            select(1)
 
 
 class DupTest(unittest.TestCase):
     def test_signature(self):
-        comb = dup()
-        self.assertEqual(comb.signature.n_in, 1)
-        self.assertEqual(comb.signature.n_out, 2)
-        self.assertEqual(comb.signature.in_shape, ((),))
+        dup = cb.dup()
+        self.assertEqual(dup.signature.n_in, 1)
+        self.assertEqual(dup.signature.n_out, 2)
+        self.assertEqual(dup.signature.in_shape, ((),))
 
     def test_default(self):
-        comb = dup()
-        self.assertEqual(comb(1), (1, 1))
+        dup = cb.dup()
+        self.assertEqual(dup(1), (1, 1))
 
     def test_single_item(self):
-        comb = dup(n_in=1)
-        self.assertEqual(comb(1), (1, 1))
+        dup = cb.dup(n_in=1)
+        self.assertEqual(dup(1), (1, 1))
 
     def test_many_items(self):
-        comb = dup(n_in=2)
-        self.assertEqual(comb(1, 2), (1, 2, 1, 2))
+        dup = cb.dup(n_in=2)
+        self.assertEqual(dup(1, 2), (1, 2, 1, 2))
 
     def test_without_any_item(self):
-        comb = dup(n_in=0)
-        self.assertEqual(comb(), ())
+        dup = cb.dup(n_in=0)
+        self.assertEqual(dup(), ())
 
     def test_extra_input(self):
-        comb = dup()
-        self.assertEqual(comb(1, 2, 3, 4), (1, 1, 2, 3, 4))
+        dup = cb.dup()
+        self.assertEqual(dup(1, 2, 3, 4), (1, 1, 2, 3, 4))
 
     def test_less_input(self):
-        comb = dup(n_in=2)
+        dup = cb.dup(n_in=2)
         with self.assertRaises(ValueError):
-            comb(1)
+            dup(1)
 
 
 class DropTest(unittest.TestCase):
     def test_signature(self):
-        comb = drop()
-        self.assertEqual(comb.signature.n_in, 1)
-        self.assertEqual(comb.signature.n_out, 0)
-        self.assertEqual(comb.signature.in_shape, ((),))
+        drop = cb.drop()
+        self.assertEqual(drop.signature.n_in, 1)
+        self.assertEqual(drop.signature.n_out, 0)
+        self.assertEqual(drop.signature.in_shape, ((),))
 
     def test_default(self):
-        comb = drop()
-        self.assertEqual(comb(1, 2), 2)
+        drop = cb.drop()
+        self.assertEqual(drop(1, 2), 2)
 
     def test_single_item(self):
-        comb = drop(n_in=1)
-        self.assertEqual(comb(1), ())
+        drop = cb.drop(n_in=1)
+        self.assertEqual(drop(1), ())
 
     def test_many_items(self):
-        comb = drop(n_in=2)
-        self.assertEqual(comb(1, 2), ())
+        drop = cb.drop(n_in=2)
+        self.assertEqual(drop(1, 2), ())
 
     def test_without_any_item(self):
-        comb = drop(n_in=0)
-        self.assertEqual(comb(), ())
+        drop = cb.drop(n_in=0)
+        self.assertEqual(drop(), ())
 
     def test_extra_input(self):
-        comb = drop()
-        self.assertEqual(comb(1, 2, 3, 4), (2, 3, 4))
+        drop = cb.drop()
+        self.assertEqual(drop(1, 2, 3, 4), (2, 3, 4))
 
     def test_less_input(self):
-        comb = drop(n_in=2)
+        drop = cb.drop(n_in=2)
         with self.assertRaises(ValueError):
-            comb(1)
+            drop(1)

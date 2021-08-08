@@ -3,9 +3,9 @@
 from typing import Any, Callable, Optional
 from functools import wraps
 import logging
-from redex._src import util
-from redex._src import function as fn
-from redex._src.function import Fn, Signature
+from redex import util
+from redex import function as fn
+from redex.function import Fn, Signature
 
 # TODO: enable type check after: mypy > 0.910.
 # https://github.com/python/mypy/issues/9980

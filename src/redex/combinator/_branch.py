@@ -2,12 +2,12 @@
 
 from typing import List
 from functools import reduce
-from redex._src import util
-from redex._src import function as fn
-from redex._src.function import Fn, FnIter
-from redex._src.combinator.serial import serial, Serial
-from redex._src.combinator.parallel import parallel
-from redex._src.combinator.select import select
+from redex import util
+from redex import function as fn
+from redex.function import Fn, FnIter
+from redex.combinator._serial import serial, Serial
+from redex.combinator._parallel import parallel
+from redex.combinator._select import select
 
 
 def branch(*children: FnIter) -> Serial:
