@@ -46,6 +46,6 @@ setup(
     ],
     extras_require={
         "docs": ["sphinx", "furo"],
-        "tests": ["hypothesis"],
+        "development": ["hypothesis", "pylint"],
     },
 )

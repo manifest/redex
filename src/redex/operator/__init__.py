@@ -1,7 +1,7 @@
 """Operator is just a function."""
 
 from operator import add, sub
-from redex._src.operator.identity import identity
+from redex.operator._identity import identity
 
 __all__ = [
     "add",

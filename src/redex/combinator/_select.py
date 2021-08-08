@@ -1,9 +1,9 @@
 """The select combinator."""
 
 from typing import Optional, List
-from redex._src.function import Signature
-from redex._src.stack import stackmethod, Stack
-from redex._src.combinator.base import Combinator
+from redex.function import Signature
+from redex.stack import stackmethod, Stack
+from redex.combinator._base import Combinator
 
 # pylint: disable=too-few-public-methods
 class Select(Combinator):

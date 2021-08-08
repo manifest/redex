@@ -5,7 +5,7 @@ import inspect
 from typing import Any, Callable, Iterable, List, NoReturn, Optional, Union
 from dataclasses import dataclass
 from functools import reduce
-from redex._src import util
+from redex import util
 
 
 @dataclass

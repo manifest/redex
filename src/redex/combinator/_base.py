@@ -3,7 +3,7 @@
 import typing
 from typing import Any
 from dataclasses import dataclass
-from redex._src.function import FineCallable
+from redex.function import FineCallable
 
 # pylint: disable=too-few-public-methods
 class Combinator(FineCallable):
