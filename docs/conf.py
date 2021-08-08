@@ -75,7 +75,7 @@ def run_apidoc(_):
         "-A", author,
         "-V", version,
         "-o", str(DOCS_DIR / "_apidoc"),
-        str(SRC_DIR / project.lower())
+        str(SRC_DIR / project.replace("-","_").lower())
     ])
 
 def setup(app):

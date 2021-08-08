@@ -1,9 +1,5 @@
-Welcome to Redex's documentation!
-=================================
-
-.. toctree::
-   :maxdepth: 2
-   :caption: Contents:
+Packages and modules
+--------------------
 
 .. toctree::
    :maxdepth: 2
@@ -11,8 +7,9 @@ Welcome to Redex's documentation!
 
    _apidoc/modules
 
+
 Indices and tables
-==================
+------------------
 
 * :ref:`genindex`
 * :ref:`modindex`
