@@ -9,6 +9,8 @@ sphinx:
 
 build:
   image: testing
+  apt_packages:
+    - pandoc
 
 python:
   version: 3.9

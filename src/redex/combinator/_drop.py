@@ -18,7 +18,7 @@ class Drop(Combinator):
 def drop(n_in: int = 1) -> Drop:
     """Creates a duplicate combinator.
 
-    Drops the top stack items.
+    Drops some of inputs.
 
     >>> from redex import combinator as cb
     >>> drop = cb.drop()

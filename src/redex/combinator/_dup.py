@@ -19,7 +19,7 @@ class Dup(Combinator):
 def dup(n_in: int = 1) -> Dup:
     """Creates a duplicate combinator.
 
-    The combinator makes a copy of the top items on the stack.
+    The combinator makes a copy of inputs.
 
     >>> from redex import combinator as cb
     >>> dup = cb.dup()

@@ -40,6 +40,7 @@ extensions = [
     "sphinx.ext.intersphinx",
     "sphinx.ext.viewcode",
     "sphinx.ext.mathjax",
+    "nbsphinx",
 ]
 
 # Add any paths that contain templates here, relative to this directory.
