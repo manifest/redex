@@ -1,3 +1,13 @@
+Getting started
+------------------
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Tutorials
+
+   notebooks/intro
+
+
 Packages and modules
 --------------------
 

@@ -45,7 +45,7 @@ setup(
     install_requires=[
     ],
     extras_require={
-        "docs": ["sphinx", "furo"],
+        "docs": ["sphinx", "furo", "nbsphinx", "ipykernel"],
         "development": ["hypothesis", "pylint"],
     },
 )

@@ -13,9 +13,9 @@ from redex.combinator._select import select
 def branch(*children: FnIter) -> Serial:
     """Creates a branch combinator.
 
-    The combinator combines multiple branches of combosite functions
-    and operate on copy of inputs. Each branch is a function or a serie
-    of composite functions.
+    The combinator combines multiple branches of given functions
+    and operate on copy of inputs. Each branch includes a sequence
+    of functions applied serially.
 
     >>> import operator as op
     >>> from redex import combinator as cb

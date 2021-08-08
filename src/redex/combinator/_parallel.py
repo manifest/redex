@@ -35,7 +35,9 @@ class Parallel(Combinator):
 def parallel(*children: FnIter) -> Parallel:
     """Creates a parallel combinator.
 
-    The combinator applies functions in parallel.
+    The combinator applies functions in parallel to its inputs. Each function
+    consumes a span of inputs. The span sizes are determined by a number of
+    required arguments of these functions.
 
     >>> import operator as op
     >>> from redex import combinator as cb

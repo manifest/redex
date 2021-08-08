@@ -67,5 +67,6 @@ jobs:
 
       - name: Check tests in docs
         run: |
+          sudo apt-get -y install pandoc
           pip install .[docs]
           sphinx-build -M doctest "docs" "docs/_build"
