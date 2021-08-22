@@ -12,7 +12,7 @@ class Combinator(FineCallable):
     if typing.TYPE_CHECKING:
 
         def __init__(self, *args: Any, **kwargs: Any) -> None:
-            # this stub makes sure pytype accepts constructor arguments.
+            # This stub informs a type checker that this functon is implemented.
             pass
 
     def __init_subclass__(cls) -> None:
