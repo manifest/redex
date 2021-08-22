@@ -11,6 +11,7 @@ class Combinator(FineCallable):
 
     if typing.TYPE_CHECKING:
 
+        # pylint: disable=super-init-not-called
         def __init__(self, *args: Any, **kwargs: Any) -> None:
             # This stub informs a type checker that this functon is implemented.
             pass
