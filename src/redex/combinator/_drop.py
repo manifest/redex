@@ -16,7 +16,7 @@ class Drop(Combinator):
 
 
 def drop(n_in: int = 1) -> Drop:
-    """Creates a duplicate combinator.
+    """Creates a drop combinator.
 
     Drops some of inputs.
 
