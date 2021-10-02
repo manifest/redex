@@ -2,7 +2,7 @@ from typing import Any, NoReturn
 import inspect
 import functools
 import unittest
-from redex import operator as op
+import operator as op
 from redex.function import infer_signature, infer_name, FineCallable, Signature
 from redex.function import _count_outputs, _infer_input_shape
 

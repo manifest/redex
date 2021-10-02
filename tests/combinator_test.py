@@ -1,5 +1,5 @@
 import unittest
-from redex import operator as op
+import operator as op
 from redex import combinator as cb
 from redex.function import Signature
 
