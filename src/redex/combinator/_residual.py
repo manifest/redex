@@ -1,12 +1,12 @@
 """The residual combinator."""
 
-from redex import operator as op
 from redex import util
 from redex.function import Fn, FnIter
 from redex import function as fn
 from redex.combinator._serial import serial, Serial
 from redex.combinator._branch import branch
 from redex.combinator._identity import identity
+from redex.combinator._add import add
 
 
 def residual(*children: FnIter, shortcut: Fn = identity(n_in=1)) -> Serial:
@@ -14,9 +14,8 @@ def residual(*children: FnIter, shortcut: Fn = identity(n_in=1)) -> Serial:
 
     The combinator computes the sum of two branches: main and shortcut.
 
-    >>> import operator as op
     >>> from redex import combinator as cb
-    >>> residual = cb.residual(cb.serial(op.add, op.add))
+    >>> residual = cb.residual(cb.serial(cb.add(), cb.add()))
     >>> residual(1, 2, 3) == 1 + 2 + 3 + 1
     True
 
@@ -49,5 +48,5 @@ def residual(*children: FnIter, shortcut: Fn = identity(n_in=1)) -> Serial:
 
     return serial(
         branch(grouped_children, shortcut),
-        op.add,
+        add(n_in=2),
     )
