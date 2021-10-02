@@ -28,6 +28,7 @@ from redex.combinator._base import Combinator
 from redex.combinator._drop import drop, Drop
 from redex.combinator._dup import dup, Dup
 from redex.combinator._identity import identity, Identity
+from redex.combinator._mul import mul, Mul
 from redex.combinator._parallel import parallel, Parallel
 from redex.combinator._residual import residual
 from redex.combinator._select import select, Select
@@ -44,6 +45,8 @@ __all__ = [
     "Dup",
     "identity",
     "Identity",
+    "mul",
+    "Mul",
     "parallel",
     "Parallel",
     "residual",
