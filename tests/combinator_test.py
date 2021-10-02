@@ -297,3 +297,36 @@ class DropTest(unittest.TestCase):
         drop = cb.drop(n_in=2)
         with self.assertRaises(ValueError):
             drop(1)
+
+
+class IdentityTest(unittest.TestCase):
+    def test_signature(self):
+        identity = cb.identity()
+        self.assertEqual(identity.signature.n_in, 1)
+        self.assertEqual(identity.signature.n_out, 1)
+        self.assertEqual(identity.signature.in_shape, ((),))
+
+    def test_default(self):
+        identity = cb.identity()
+        self.assertEqual(identity(1, 2), (1, 2))
+
+    def test_single_item(self):
+        identity = cb.identity(n_in=1)
+        self.assertEqual(identity(1), 1)
+
+    def test_many_items(self):
+        identity = cb.identity(n_in=2)
+        self.assertEqual(identity(1, 2), (1, 2))
+
+    def test_without_any_item(self):
+        identity = cb.identity(n_in=0)
+        self.assertEqual(identity(), ())
+
+    def test_extra_input(self):
+        identity = cb.identity()
+        self.assertEqual(identity(1, 2, 3, 4), (1, 2, 3, 4))
+
+    def test_less_input(self):
+        identity = cb.identity(n_in=2)
+        with self.assertRaises(ValueError):
+            identity(1)
