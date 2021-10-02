@@ -6,9 +6,10 @@ from redex.function import Fn, FnIter
 from redex import function as fn
 from redex.combinator._serial import serial, Serial
 from redex.combinator._branch import branch
+from redex.combinator._identity import identity
 
 
-def residual(*children: FnIter, shortcut: Fn = op.identity) -> Serial:
+def residual(*children: FnIter, shortcut: Fn = identity(n_in=1)) -> Serial:
     """Creates a residual combinator.
 
     The combinator computes the sum of two branches: main and shortcut.

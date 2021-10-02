@@ -30,6 +30,7 @@ from redex.combinator._branch import branch
 from redex.combinator._residual import residual
 from redex.combinator._dup import dup, Dup
 from redex.combinator._drop import drop, Drop
+from redex.combinator._identity import identity, Identity
 
 __all__ = [
     "Combinator",
@@ -45,4 +46,6 @@ __all__ = [
     "Dup",
     "drop",
     "Drop",
+    "identity",
+    "Identity",
 ]
