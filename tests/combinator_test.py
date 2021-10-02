@@ -330,3 +330,38 @@ class IdentityTest(unittest.TestCase):
         identity = cb.identity(n_in=2)
         with self.assertRaises(ValueError):
             identity(1)
+
+
+class AddTest(unittest.TestCase):
+    def test_signature(self):
+        add = cb.add()
+        self.assertEqual(add.signature.n_in, 2)
+        self.assertEqual(add.signature.n_out, 1)
+        self.assertEqual(
+            add.signature.in_shape,
+            (
+                (),
+                (),
+            ),
+        )
+
+    def test_default(self):
+        add = cb.add()
+        self.assertEqual(add(1, 2), 3)
+
+    def test_single_item(self):
+        identity = cb.identity(n_in=1)
+        self.assertEqual(identity(1), 1)
+
+    def test_many_items(self):
+        add = cb.add(n_in=4)
+        self.assertEqual(add(1, 2, 3, 4), 10)
+
+    def test_extra_input(self):
+        add = cb.add(n_in=2)
+        self.assertEqual(add(1, 2, 3, 4), (3, 3, 4))
+
+    def test_less_input(self):
+        add = cb.add(n_in=2)
+        with self.assertRaises(ValueError):
+            add(1)
