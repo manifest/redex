@@ -3,12 +3,13 @@ from setuptools import setup
 from setuptools import find_packages
 
 PROJECT = "redex"
+PROJECT_DIR = f"src/{PROJECT}"
 REPOSITORY = f"manifest/{PROJECT}"
 README = (Path(__file__).parent / "README.md").read_text()
 
 # Setup project version.
 __version__ = None
-with open(f"src/{PROJECT}/version.py") as file:
+with open(f"{PROJECT_DIR}/version.py") as file:
     exec(file.read(), globals())
 
 # Setup keywords.
@@ -37,10 +38,10 @@ setup(
         "Typing :: Typed",
     ],
     # Required for mypy to find the installed package.
-    zip_safe=False,
-    package_data={f"src/{PROJECT}": ["py.typed"]},
     packages=find_packages(where="src"),
-    package_dir={"": "src"},
+    package_dir={PROJECT: PROJECT_DIR},
+    package_data={PROJECT: ["py.typed"]},
+    zip_safe=False,
     python_requires=">=3.9",
     install_requires=[
     ],
