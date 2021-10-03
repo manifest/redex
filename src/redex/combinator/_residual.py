@@ -6,7 +6,7 @@ from redex import function as fn
 from redex.combinator._serial import serial, Serial
 from redex.combinator._branch import branch
 from redex.combinator._identity import identity
-from redex.combinator._add import add
+from redex.combinator._fold import add
 
 
 def residual(*children: FnIter, shortcut: Fn = identity(n_in=1)) -> Serial:
