@@ -344,11 +344,11 @@ class AddTest(unittest.TestCase):
 
     def test_default(self):
         add = cb.add()
-        self.assertEqual(add(1, 2), 3)
+        self.assertEqual(add(4, 2), 6)
 
     def test_single_item(self):
-        identity = cb.identity(n_in=1)
-        self.assertEqual(identity(1), 1)
+        add = cb.add(n_in=1)
+        self.assertEqual(add(1), 1)
 
     def test_many_items(self):
         add = cb.add(n_in=4)
@@ -364,6 +364,38 @@ class AddTest(unittest.TestCase):
             add(1)
 
 
+class SubTest(unittest.TestCase):
+    def test_signature(self):
+        sub = cb.sub()
+        self.assertEqual(sub.signature.n_in, 2)
+        self.assertEqual(sub.signature.n_out, 1)
+        self.assertEqual(
+            sub.signature.in_shape,
+            ((), ()),
+        )
+
+    def test_default(self):
+        sub = cb.sub()
+        self.assertEqual(sub(4, 2), 2)
+
+    def test_single_item(self):
+        sub = cb.sub(n_in=1)
+        self.assertEqual(sub(1), 1)
+
+    def test_many_items(self):
+        sub = cb.sub(n_in=4)
+        self.assertEqual(sub(1, 2, 3, 4), -8)
+
+    def test_extra_input(self):
+        sub = cb.sub(n_in=2)
+        self.assertEqual(sub(1, 2, 3, 4), (-1, 3, 4))
+
+    def test_less_input(self):
+        sub = cb.sub(n_in=2)
+        with self.assertRaises(ValueError):
+            sub(1)
+
+
 class MulTest(unittest.TestCase):
     def test_signature(self):
         mul = cb.mul()
@@ -376,11 +408,11 @@ class MulTest(unittest.TestCase):
 
     def test_default(self):
         mul = cb.mul()
-        self.assertEqual(mul(1, 2), 2)
+        self.assertEqual(mul(4, 2), 8)
 
     def test_single_item(self):
-        identity = cb.identity(n_in=1)
-        self.assertEqual(identity(1), 1)
+        mul = cb.mul(n_in=1)
+        self.assertEqual(mul(1), 1)
 
     def test_many_items(self):
         mul = cb.mul(n_in=4)
@@ -394,3 +426,35 @@ class MulTest(unittest.TestCase):
         mul = cb.mul(n_in=2)
         with self.assertRaises(ValueError):
             mul(1)
+
+
+class DivTest(unittest.TestCase):
+    def test_signature(self):
+        div = cb.div()
+        self.assertEqual(div.signature.n_in, 2)
+        self.assertEqual(div.signature.n_out, 1)
+        self.assertEqual(
+            div.signature.in_shape,
+            ((), ()),
+        )
+
+    def test_default(self):
+        div = cb.div()
+        self.assertEqual(div(4, 2), 2)
+
+    def test_single_item(self):
+        div = cb.div(n_in=1)
+        self.assertEqual(div(1), 1)
+
+    def test_many_items(self):
+        div = cb.div(n_in=4)
+        self.assertAlmostEqual(div(1, 2, 3, 4), 0.04166, places=4)
+
+    def test_extra_input(self):
+        div = cb.div(n_in=2)
+        self.assertAlmostEqual(div(1, 2, 3, 4), (0.5000, 3, 4), places=4)
+
+    def test_less_input(self):
+        div = cb.div(n_in=2)
+        with self.assertRaises(ValueError):
+            div(1)

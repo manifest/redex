@@ -22,13 +22,12 @@ parameters must be definite (e.g. tuple parameters must be specified
 and variadic tuples must not be used)*.
 """
 
-from redex.combinator._add import add, Add
+from redex.combinator._fold import Foldl, fold, foldl, add, sub, mul, div
 from redex.combinator._branch import branch
 from redex.combinator._base import Combinator
 from redex.combinator._drop import drop, Drop
 from redex.combinator._dup import dup, Dup
 from redex.combinator._identity import identity, Identity
-from redex.combinator._mul import mul, Mul
 from redex.combinator._parallel import parallel, Parallel
 from redex.combinator._residual import residual
 from redex.combinator._select import select, Select
@@ -36,17 +35,19 @@ from redex.combinator._serial import serial, Serial
 
 __all__ = [
     "add",
-    "Add",
     "branch",
     "Combinator",
+    "div",
     "drop",
     "Drop",
     "dup",
     "Dup",
+    "fold",
+    "foldl",
+    "Foldl",
     "identity",
     "Identity",
     "mul",
-    "Mul",
     "parallel",
     "Parallel",
     "residual",
@@ -54,4 +55,5 @@ __all__ = [
     "Select",
     "serial",
     "Serial",
+    "sub",
 ]
