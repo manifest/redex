@@ -39,7 +39,7 @@ setup(
     ],
     # Required for mypy to find the installed package.
     packages=find_packages(where="src"),
-    package_dir={PROJECT: PROJECT_DIR},
+    package_dir={"": "src"},
     package_data={PROJECT: ["py.typed"]},
     zip_safe=False,
     python_requires=">=3.9",
